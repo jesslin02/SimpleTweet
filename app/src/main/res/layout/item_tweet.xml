@@ -17,14 +17,23 @@
         tools:srcCompat="@tools:sample/avatars[0]" />
 
     <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@+id/ivProfileImage"
+        android:textStyle="bold"
+        tools:text="Jessica Lin" />
+
+    <TextView
         android:id="@+id/tvScreenName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginHorizontal="8dp"
-        android:layout_toEndOf="@+id/ivProfileImage"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        tools:text="jessicuhlin" />
+        android:layout_marginStart="4dp"
+        android:layout_toEndOf="@+id/tvName"
+        tools:text="\@jessicuhlin" />
 
     <TextView
         android:id="@+id/tvBody"
@@ -43,5 +52,14 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/tvBody"
         android:background="?android:attr/listDivider" />
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="4dp"
+        android:layout_toEndOf="@+id/tvScreenName"
+        tools:text="7m" />
 
 </RelativeLayout>
