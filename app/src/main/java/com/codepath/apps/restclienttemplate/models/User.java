@@ -6,7 +6,7 @@ import org.json.JSONObject;
 public class User {
 
     public String name;
-    /* handle */
+    /* aka twitter handle */
     public String screenName;
     public String pfpUrl;
 
