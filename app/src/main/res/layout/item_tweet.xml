@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="4dp">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/ivProfileImage"
@@ -12,15 +11,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="fitStart"
         tools:srcCompat="@tools:sample/avatars[0]" />
+        <!--android:layout_alignBottom="@+id/tvBody"-->
 
     <TextView
         android:id="@+id/tvName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="8dp"
         android:layout_marginStart="8dp"
         android:layout_toEndOf="@+id/ivProfileImage"
         android:textStyle="bold"
@@ -31,6 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="8dp"
         android:layout_marginStart="4dp"
         android:layout_toEndOf="@+id/tvName"
         tools:text="\@jessicuhlin" />
@@ -42,8 +45,9 @@
         android:layout_below="@+id/tvScreenName"
         android:layout_marginHorizontal="8dp"
         android:layout_marginVertical="4dp"
+        android:minHeight="30dp"
         android:layout_toEndOf="@+id/ivProfileImage"
-        tools:text="This is my sample tweet!" />
+        tools:text="This is my sample tweet! Here is another sentence to make it a little bit longer. And here is another one because I want my tweet to be three lines long." />
 
     <View
         android:id="@+id/divider"
@@ -58,6 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="8dp"
         android:layout_marginStart="4dp"
         android:layout_toEndOf="@+id/tvScreenName"
         tools:text="7m" />
