@@ -71,6 +71,10 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvScreenName;
         TextView tvDate;
 
+        /**
+         *
+         * @param itemView
+         */
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             ivPfp = itemView.findViewById(R.id.ivProfileImage);
@@ -80,6 +84,10 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvDate = itemView.findViewById(R.id.tvDate);
         }
 
+        /**
+         * binds a Tweet object into the item view
+         * @param t a Tweet object that contains the body, timestamp, and user information
+         */
         public void bind(Tweet t) {
             tvBody.setText(t.body);
             tvName.setText(t.user.name);
