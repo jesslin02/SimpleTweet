@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -89,7 +90,9 @@ public class TimelineActivity extends AppCompatActivity {
 
         switch(id) {
             case R.id.compose:
-                // TODO: compose tweet
+                Intent i = new Intent(this, ComposeActivity.class);
+                this.startActivity(i);
+                // TODO: get data back about new tweet that was published
                 return true;
             case R.id.logout:
                 onLogoutButton();

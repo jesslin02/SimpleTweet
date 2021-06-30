@@ -9,6 +9,6 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/logout"
-        android:title="Logout"
+        android:title="@string/logout"
         app:showAsAction="ifRoom" />
 </menu>
