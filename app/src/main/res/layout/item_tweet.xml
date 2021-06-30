@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvScreenName"
         android:layout_marginHorizontal="8dp"
-        android:layout_marginVertical="4dp"
+        android:layout_marginTop="4dp"
         android:minHeight="30dp"
         android:layout_toEndOf="@+id/ivProfileImage"
         tools:text="This is my sample tweet! Here is another sentence to make it a little bit longer. And here is another one because I want my tweet to be three lines long." />
@@ -53,8 +53,9 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_below="@+id/ivEmbed"
+        android:layout_marginTop="8dp"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/tvBody"
         android:background="?android:attr/listDivider" />
 
     <TextView
@@ -66,5 +67,16 @@
         android:layout_marginStart="4dp"
         android:layout_toEndOf="@+id/tvScreenName"
         tools:text="7m" />
+
+    <ImageView
+        android:id="@+id/ivEmbed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvBody"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_toEndOf="@+id/ivProfileImage"
+        tools:srcCompat="@tools:sample/avatars"
+        android:visibility="invisible"/>
 
 </RelativeLayout>

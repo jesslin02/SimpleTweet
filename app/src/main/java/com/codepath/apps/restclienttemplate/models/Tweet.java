@@ -26,6 +26,7 @@ public class Tweet {
 
     String body;
     String createdAt;
+    String embedUrl;
     User user;
 
     // empty constructor needed by Parceler library
@@ -38,6 +39,8 @@ public class Tweet {
         tweet.body = jsonObject.getString("text");
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
+        tweet.embedUrl = embedFromJson(jsonObject.getJSONObject("entities"));
+        Log.i("Tweet", "creating tweet from json object");
         return tweet;
     }
 
@@ -47,6 +50,18 @@ public class Tweet {
             tweets.add(fromJson(jsonArray.getJSONObject(i)));
         }
         return tweets;
+    }
+
+    private static String embedFromJson(JSONObject jsonObject) {
+        try {
+            JSONObject media = jsonObject.getJSONArray("media").getJSONObject(0);
+            Log.i("Tweet", "media object success " + media);
+            return media.getString("media_url_https");
+        } catch (JSONException e) {
+            Log.e("Tweet", "media array failure " + e);
+            return null;
+        }
+
     }
 
     /**
@@ -91,5 +106,9 @@ public class Tweet {
 
     public User getUser() {
         return user;
+    }
+
+    public String getEmbedUrl() {
+        return embedUrl;
     }
 }

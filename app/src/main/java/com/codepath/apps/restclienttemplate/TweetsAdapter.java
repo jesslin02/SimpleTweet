@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -21,7 +23,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
     Context context;
     List<Tweet> tweets;
-
     /**
      * pass in context and list of tweets
      */
@@ -62,6 +63,18 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         return tweets.size();
     }
 
+    // clean all elements of the recycler view
+    public void clear() {
+        tweets.clear();
+        notifyDataSetChanged();
+    }
+
+//    // add a list of items
+//    public void addAll(List<Tweet> lst) {
+//        tweets.addAll(lst);
+//        notifyDataSetChanged();
+//    }
+
     // define a viewholder
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -70,6 +83,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvName;
         TextView tvScreenName;
         TextView tvDate;
+        ImageView ivEmbed;
 
         /**
          *
@@ -82,6 +96,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvName = itemView.findViewById(R.id.tvName);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             tvDate = itemView.findViewById(R.id.tvDate);
+            ivEmbed = itemView.findViewById(R.id.ivEmbed);
         }
 
         /**
@@ -96,6 +111,14 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             Glide.with(context)
                     .load(t.getUser().getPfpUrl())
                     .into(ivPfp);
+            String embedUrl = t.getEmbedUrl();
+            Log.i("TweetsAdapter", t.getUser().getName() + " imageUrl: " + embedUrl);
+            if (embedUrl != null) {
+                Glide.with(context)
+                        .load(embedUrl)
+                        .into(ivEmbed);
+                ivEmbed.setVisibility(View.VISIBLE);
+            }
         }
     }
 }
