@@ -89,12 +89,12 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
          * @param t a Tweet object that contains the body, timestamp, and user information
          */
         public void bind(Tweet t) {
-            tvBody.setText(t.body);
-            tvName.setText(t.user.name);
-            tvScreenName.setText(t.user.screenName);
+            tvBody.setText(t.getBody());
+            tvName.setText(t.getUser().getName());
+            tvScreenName.setText(t.getUser().getScreenName());
             tvDate.setText(t.getRelativeTimeAgo());
             Glide.with(context)
-                    .load(t.user.pfpUrl)
+                    .load(t.getUser().getPfpUrl())
                     .into(ivPfp);
         }
     }
