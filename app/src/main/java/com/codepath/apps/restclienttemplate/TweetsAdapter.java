@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder>{
 
@@ -84,6 +88,9 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvScreenName;
         TextView tvDate;
         ImageView ivEmbed;
+        ImageView ivReply;
+        ImageView ivRetweet;
+        ImageView ivLike;
 
         /**
          *
@@ -97,6 +104,9 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             tvDate = itemView.findViewById(R.id.tvDate);
             ivEmbed = itemView.findViewById(R.id.ivEmbed);
+            ivReply = itemView.findViewById(R.id.ivReply);
+            ivRetweet = itemView.findViewById(R.id.ivRetweet);
+            ivLike = itemView.findViewById(R.id.ivLike);
         }
 
         /**
@@ -108,17 +118,37 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvName.setText(t.getUser().getName());
             tvScreenName.setText(t.getUser().getScreenName());
             tvDate.setText(t.getRelativeTimeAgo());
+
             Glide.with(context)
                     .load(t.getUser().getPfpUrl())
+                    .transform(new CircleCrop())
                     .into(ivPfp);
-            String embedUrl = t.getEmbedUrl();
+
+            int radius = 30;
+            int margin = 10;
+            String embedUrl = null;
+            embedUrl = t.getEmbedUrl();
             Log.i("TweetsAdapter", t.getUser().getName() + " imageUrl: " + embedUrl);
             if (embedUrl != null) {
                 Glide.with(context)
                         .load(embedUrl)
+                        .transform(new RoundedCornersTransformation(radius, margin))
+                        .override(700)
                         .into(ivEmbed);
                 ivEmbed.setVisibility(View.VISIBLE);
             }
+
+            int replyRes = context.getResources().getIdentifier("@drawable/ic_reply", null, context.getPackageName());
+            Drawable reply = context.getResources().getDrawable(replyRes);
+            ivReply.setImageDrawable(reply);
+
+            int retweetRes = context.getResources().getIdentifier("@drawable/ic_vector_retweet_stroke", null, context.getPackageName());
+            Drawable retweet = context.getResources().getDrawable(retweetRes);
+            ivRetweet.setImageDrawable(retweet);
+
+            int likeRes = context.getResources().getIdentifier("@drawable/ic_vector_heart_stroke", null, context.getPackageName());
+            Drawable like = context.getResources().getDrawable(likeRes);
+            ivLike.setImageDrawable(like);
         }
     }
 }

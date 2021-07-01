@@ -3,13 +3,23 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/miActionProgress"
+        android:orderInCategory="100"
+        android:title="Loading..."
+        android:visible="false"
+        app:actionLayout="@layout/action_view_progress"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/compose"
         android:icon="@drawable/ic_vector_compose"
         android:title="Compose"
+        android:tint="@color/white"
         app:showAsAction="always" />
     <item
         android:id="@+id/logout"
-        android:icon="@drawable/logout_icon"
+        android:icon="@drawable/ic_logout_icon"
         android:title="@string/logout"
+        android:tint="@color/white"
         app:showAsAction="ifRoom" />
 </menu>
