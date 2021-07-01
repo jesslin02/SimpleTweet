@@ -29,6 +29,7 @@ public class ComposeActivity extends AppCompatActivity {
     Button btnTweet;
     TextInputLayout tiLayout;
     TwitterClient client;
+    Intent intent;
 
 
     @Override
@@ -43,6 +44,11 @@ public class ComposeActivity extends AppCompatActivity {
         tiLayout = findViewById(R.id.tiLayout);
 
         tiLayout.setCounterMaxLength(MAX_TWEET_LENGTH);
+
+        intent = getIntent();
+        if (intent.getBooleanExtra("reply", false)) {
+            etCompose.setText(intent.getStringExtra("screenName"));
+        }
 
         // set click listener on button
         btnTweet.setOnClickListener(new View.OnClickListener() {

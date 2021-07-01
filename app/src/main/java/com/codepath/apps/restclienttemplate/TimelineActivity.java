@@ -176,6 +176,7 @@ public class TimelineActivity extends AppCompatActivity {
         switch(id) {
             case R.id.compose:
                 Intent i = new Intent(this, ComposeActivity.class);
+                i.putExtra("reply", false);
                 this.startActivityForResult(i, REQUEST_CODE);
                 return true;
             case R.id.logout:
@@ -186,8 +187,10 @@ public class TimelineActivity extends AppCompatActivity {
         }
     }
 
-    protected void replyToTweet() {
+    protected void replyToTweet(String scrName) {
         Intent i = new Intent(this, ComposeActivity.class);
+        i.putExtra("reply", true);
+        i.putExtra("screenName", scrName);
         this.startActivityForResult(i, REQUEST_CODE);
     }
 

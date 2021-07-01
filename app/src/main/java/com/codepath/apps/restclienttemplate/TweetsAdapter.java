@@ -169,7 +169,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ivReply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    tmActivity.replyToTweet();
+                    tmActivity.replyToTweet(t.getUser().getScreenName());
                 }
             });
 
