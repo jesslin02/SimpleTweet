@@ -37,7 +37,8 @@ public class TimelineActivity extends AppCompatActivity {
     TweetsAdapter adapter;
     SwipeRefreshLayout swipeContainer;
     MenuItem miActionProgressItem;
-
+    EndlessRecyclerViewScrollListener scrollListener;
+    long maxId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +69,57 @@ public class TimelineActivity extends AppCompatActivity {
         rvTweets = findViewById(R.id.rvTweets);
         // initialize the list of tweets and adapter
         tweets = new ArrayList<>();
-        adapter = new TweetsAdapter(this, tweets);
+        adapter = new TweetsAdapter(this, tweets, this);
+        LinearLayoutManager llManager = new LinearLayoutManager(this);
         // recycler view setup: layout manager and the adapter
-        rvTweets.setLayoutManager(new LinearLayoutManager(this));
+        rvTweets.setLayoutManager(llManager);
         rvTweets.setAdapter(adapter);
 
+        // Retain an instance so that you can call `resetState()` for fresh searches
+        scrollListener = new EndlessRecyclerViewScrollListener(llManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadNextDataFromApi();
+            }
+        };
+
+        // Adds the scroll listener to RecyclerView
+        rvTweets.addOnScrollListener(scrollListener);
+
         populateHomeTimeline();
+    }
+
+    // Append the next page of data into the adapter
+    // This method probably sends out a network request and appends new data items to your adapter.
+    public void loadNextDataFromApi() {
+        // Send an API request to retrieve appropriate paginated data
+        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
+        client.getRefreshedTimeline(maxId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                Log.i(TAG, "onSuccess! endless scroll + 25 " + json.toString());
+                JSONArray jsonArray = json.jsonArray;
+                try {
+                    //  --> Deserialize and construct new model objects from the API response
+                    List<Tweet> newTweets = Tweet.fromJsonArray(jsonArray);
+                    //  --> Append the new data objects to the existing set of items inside the array of items
+                    tweets.addAll(newTweets);
+                    //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
+                    adapter.notifyDataSetChanged();
+                    maxId = tweets.get(tweets.size() - 1).getIdLong() - 1;
+                    swipeContainer.setRefreshing(false);
+                } catch (JSONException e) {
+                    Log.e(TAG, "JSON exception", e);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.e(TAG, "onFailure! " + response, throwable);
+            }
+        });
     }
 
     /**
@@ -87,9 +133,11 @@ public class TimelineActivity extends AppCompatActivity {
                 JSONArray jsonArray = json.jsonArray;
                 try {
                     adapter.clear();
+                    scrollListener.resetState();
                     tweets.addAll(Tweet.fromJsonArray(jsonArray));
                     adapter.notifyDataSetChanged();
                     swipeContainer.setRefreshing(false);
+                    maxId = tweets.get(tweets.size() - 1).getIdLong() - 1;
                 } catch (JSONException e) {
                     Log.e(TAG, "JSON exception", e);
                 }
@@ -129,7 +177,6 @@ public class TimelineActivity extends AppCompatActivity {
             case R.id.compose:
                 Intent i = new Intent(this, ComposeActivity.class);
                 this.startActivityForResult(i, REQUEST_CODE);
-                // TODO: get data back about new tweet that was published
                 return true;
             case R.id.logout:
                 onLogoutButton();
@@ -137,6 +184,11 @@ public class TimelineActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    protected void replyToTweet() {
+        Intent i = new Intent(this, ComposeActivity.class);
+        this.startActivityForResult(i, REQUEST_CODE);
     }
 
     @Override

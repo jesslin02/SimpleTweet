@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -53,6 +54,22 @@ public class TwitterClient extends OAuthBaseClient {
 		params.put("tweet_mode", "extended");
 		params.put("count", 25);
 		params.put("since_id", 1);
+		params.put("include_rts", true);
+		params.put("exclude_replies", false);
+		client.get(apiUrl, params, handler);
+	}
+
+	public void getRefreshedTimeline(long max_id, JsonHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/home_timeline.json");
+		// Can specify query string params directly or through RequestParams.
+		RequestParams params = new RequestParams();
+		// see twitter api docs (linked) for details about parameters
+		// https://developer.twitter.com/en/docs/twitter-api/v1/tweets/timelines/api-reference/get-statuses-home_timeline
+		params.put("tweet_mode", "extended");
+		params.put("count", 25);
+		params.put("max_id", max_id);
+		params.put("include_rts", true);
+		params.put("exclude_replies", false);
 		client.get(apiUrl, params, handler);
 	}
 
@@ -60,6 +77,17 @@ public class TwitterClient extends OAuthBaseClient {
 		String apiUrl = getApiUrl("statuses/update.json");
 		RequestParams params = new RequestParams();
 		params.put("status", tweetContent);
+		client.post(apiUrl, params, "", handler);
+	}
+
+
+	public void retweet(String id, JsonHttpResponseHandler handler) {
+		Log.i("TwitterClient", "inside retweet method");
+		String idhandle = String.format("statuses/retweet/%s.json", id);
+		String apiUrl = getApiUrl(idhandle);
+		RequestParams params = new RequestParams();
+		long id_long = Long.parseLong(id);
+		params.put("id", id_long);
 		client.post(apiUrl, params, "", handler);
 	}
 

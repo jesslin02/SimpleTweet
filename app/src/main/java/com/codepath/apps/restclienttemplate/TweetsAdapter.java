@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,23 +18,33 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.sql.Time;
 import java.util.List;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+import okhttp3.Headers;
 
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder>{
 
     Context context;
     List<Tweet> tweets;
+    TimelineActivity tmActivity;
+    public static final String TAG = "TweetsAdapter";
     /**
      * pass in context and list of tweets
      */
-    public TweetsAdapter(Context context, List<Tweet> tweets) {
+    public TweetsAdapter(Context context, List<Tweet> tweets, TimelineActivity tmActivity) {
         this.context = context;
         this.tweets = tweets;
+        this.tmActivity = tmActivity;
     }
 
     /**
@@ -126,9 +138,9 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
             int radius = 30;
             int margin = 10;
-            String embedUrl = null;
-            embedUrl = t.getEmbedUrl();
+            String embedUrl = t.getEmbedUrl();
             Log.i("TweetsAdapter", t.getUser().getName() + " imageUrl: " + embedUrl);
+            ivEmbed.setImageBitmap(null);
             if (embedUrl != null) {
                 Glide.with(context)
                         .load(embedUrl)
@@ -149,6 +161,45 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             int likeRes = context.getResources().getIdentifier("@drawable/ic_vector_heart_stroke", null, context.getPackageName());
             Drawable like = context.getResources().getDrawable(likeRes);
             ivLike.setImageDrawable(like);
+
+            setListeners(t);
+        }
+
+        public void setListeners(Tweet t) {
+            ivReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tmActivity.replyToTweet();
+                }
+            });
+
+            ivRetweet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TwitterApp.getTwitterClient(context).retweet(t.getId(), new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            Log.i(TAG, "onSuccess to retweet");
+                            try {
+                                JSONObject tweet = json.jsonObject;
+                                JSONObject rtStatus = tweet.getJSONObject("retweeted_status");
+                                User user = User.fromJson(rtStatus.getJSONObject("user"));
+                                Toast.makeText(context, "retweet from " + user.getName(), Toast.LENGTH_SHORT).show();
+                                tweets.add(0, Tweet.fromJson(tweet));
+                                TweetsAdapter.this.notifyItemInserted(0);
+                                tmActivity.rvTweets.smoothScrollToPosition(0);
+                            } catch (JSONException e) {
+                                Log.e(TAG, "failure get user object from retweet " + e);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            Log.e(TAG, "onFailure to retweet " + throwable);
+                        }
+                    });
+                }
+            });
         }
     }
 }

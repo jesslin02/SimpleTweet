@@ -24,10 +24,13 @@ public class Tweet {
     static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
     static final int DAY_MILLIS = 24 * HOUR_MILLIS;
 
+    static long lowestId = Integer.MAX_VALUE;
+
     String body;
     String createdAt;
     String embedUrl;
     User user;
+    String id_str;
 
     // empty constructor needed by Parceler library
     public Tweet() {
@@ -36,6 +39,10 @@ public class Tweet {
 
     public static Tweet fromJson(JSONObject jsonObject) throws JSONException {
         Tweet tweet = new Tweet();
+        tweet.id_str = jsonObject.getString("id_str");
+//        if (tweet.getIdInt() < lowestId) {
+//            lowestId = tweet.getIdInt();
+//        }
         if (jsonObject.has("full_text")) {
             tweet.body = jsonObject.getString("full_text");
         } else {
@@ -62,7 +69,7 @@ public class Tweet {
             Log.i("Tweet", "media object success " + media);
             return media.getString("media_url_https");
         } catch (JSONException e) {
-            Log.e("Tweet", "media array failure " + e);
+            // Log.e("Tweet", "media array failure " + e);
             return null;
         }
 
@@ -114,5 +121,17 @@ public class Tweet {
 
     public String getEmbedUrl() {
         return embedUrl;
+    }
+
+    public String getId() {
+        return id_str;
+    }
+
+    public long getIdLong() {
+        return Long.parseLong(id_str);
+    }
+
+    public static long getLowestId() {
+        return lowestId;
     }
 }
