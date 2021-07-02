@@ -48,13 +48,17 @@ The following **additional** features are implemented:
 
 ## Video Walkthrough
 
-[TODO: include gif]
-
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://github.com/jesslin02/SimpleTweet/blob/main/simple-tweet-walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
-GIF created with [Kap](https://getkap.co/).
+User stories in order:
+1. pull-to-refresh
+2. logout/login
+4. compose tweet
+5. reply to tweet
+6. infinite scroll
+7. retweet (I retweet @nytimes's retweet of @uugwuu's tweet)
 
 ## Notes
 
